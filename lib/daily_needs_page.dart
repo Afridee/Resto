@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_resto/widgets/daily_needs_item.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 
 class dailyNeedsPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
   //functions:
 
   //function 1
-  void seacrchIconAction(){
+  void seacrchIconState(){
     setState(() {
       if (this.custom_Icon.icon == Icons.search) {
         this.custom_Icon = Icon(Icons.cancel);
@@ -73,7 +74,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
             IconButton(
               icon: custom_Icon,
               onPressed: () {
-                seacrchIconAction();
+                seacrchIconState();
               },
             )
           ],
@@ -144,7 +145,8 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                       print(snapshot.data.documents[index]['img']);
                                       return dailyNeedsItem(imgPath: snapshot.data.documents[index]['img'],
                                                              name: snapshot.data.documents[index]['name'],
-                                                              price: snapshot.data.documents[index]['price'],);
+                                                              price: snapshot.data.documents[index]['price'],
+                                                               qty: snapshot.data.documents[index]['qty'],);
                                     }
                                 );
                               }
@@ -154,7 +156,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                       Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      InkWell(
+                      /*InkWell(
                         onTap: (){
                           print(userID);
                         },
@@ -177,7 +179,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                       color: Colors.white,
                                       fontSize: 15.0))),
                         ),
-                      )
+                      )*/
                     ],
                   )
                 ],
@@ -185,6 +187,25 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
             )
           ],
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 1,
+        color: Color(0xffdd3572),
+        backgroundColor: Colors.white,
+        buttonBackgroundColor: Color(0xfff9b294),
+        height: 50,
+        items: <Widget>[
+          Icon(Icons.library_add, size: 30, color: Colors.white),
+          Icon(Icons.account_circle, size: 30, color: Colors.white),
+          Icon(Icons.shopping_cart, size: 30, color: Colors.white)
+        ],
+        animationDuration: Duration(
+          milliseconds: 200
+        ),
+        animationCurve: Curves.bounceInOut,
+        onTap: (index){
+
+        },
       ),
     );
   }

@@ -5,12 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_resto/daily_needs_page.dart';
 
 
-class HomePage extends StatefulWidget {
+class login_page extends StatefulWidget {
+
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _login_pageState createState() => _login_pageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _login_pageState extends State<login_page> {
 
 	//variables:
  String email;
@@ -20,25 +22,22 @@ class _HomePageState extends State<HomePage> {
  //functions:
 
  //function 1
- Future<void> login() async{   
+ Future<void> login() async{
       try{
       final auth = FirebaseAuth.instance;
       final user =  await auth.signInWithEmailAndPassword(email: email, password: password);
       if(user!=null){
       final FirebaseUser user = await auth.currentUser();
       userID = user.uid;
+			var route = new MaterialPageRoute(
+				builder: (BuildContext context) =>
+				new dailyNeedsPage(),
+			);
+			Navigator.of(context).push(route);
       }
       }catch(e){
           print(e);
       }
-
-      if(userID!=null){
-				var route = new MaterialPageRoute(
-					builder: (BuildContext context) =>
-					new dailyNeedsPage(),
-				);
-				Navigator.of(context).push(route);
-			}
  }
 
 
