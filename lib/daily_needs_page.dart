@@ -17,7 +17,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
   //variables:
   Icon custom_Icon = Icon(Icons.search);
   Widget search_text = Text('');
-  String userID;
+  String userID = '';
 
   //functions:
 

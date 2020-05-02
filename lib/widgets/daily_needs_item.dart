@@ -53,7 +53,6 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
       'qty' : updated_qty
     }, merge: true);
 
-    print(qty);
   }
 
   //4
@@ -74,7 +73,6 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
 
     }
 
-    print(qty);
   }
 
   @override
