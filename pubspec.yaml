@@ -33,6 +33,7 @@ dev_dependencies:
   cloud_firestore: ^0.13.5
   curved_navigation_bar: ^0.3.2
   auto_size_text: ^2.1.0
+  modal_progress_hud: ^0.1.3
 
 
 # For information on the generic Dart part of this file, see the
@@ -67,6 +68,9 @@ flutter:
       fonts:
         - asset: fonts/LucyTheCatRegular-Bg9x.ttf
         - asset: fonts/LucythecatRegular-R7mA.otf
+    - family: Varela
+      fonts:
+        - asset: fonts/VarelaRound-Regular.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

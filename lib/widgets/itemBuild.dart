@@ -3,21 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:project_resto/product_details.dart';
 
-class dailyNeedsItem extends StatefulWidget {
+class itemBuild extends StatefulWidget {
 
  final String name;
  final String imgPath;
  final int price;
  final int qty;
+ final String desc;
+ final bool isSupplyPage;
 
-  const dailyNeedsItem({Key key, this.name, this.imgPath, this.price, this.qty}) : super(key: key);
+  const itemBuild({Key key, this.name, this.imgPath, this.price, this.qty, this.desc, this.isSupplyPage}) : super(key: key);
 
   @override
-  _dailyNeedsItemState createState() => _dailyNeedsItemState();
+  _itemBuildState createState() => _itemBuildState();
 }
 
-class _dailyNeedsItemState extends State<dailyNeedsItem> {
+class _itemBuildState extends State<itemBuild> {
 
   //variables:
   String userID;
@@ -78,10 +81,14 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
   @override
   Widget build(BuildContext context) {
   return Padding(
-        padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+        padding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
         child: InkWell(
           onTap: () {
-            print('tapped');
+            var route = new MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new itemDetail(imgPath: widget.imgPath, name: widget.name, price: widget.price, desc: widget.desc, addToDailyNeeds: widget.isSupplyPage),
+            );
+            Navigator.of(context).push(route);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,14 +96,23 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
               Container(
                 child: Row(
                   children: [
-                    Hero(
-                      tag: widget.name,
-                      child: Image(
-                        image: NetworkImage(widget.imgPath),
-                        fit: BoxFit.cover,
-                        height: 75.0,
-                        width: 75.0
-                      )
+                    Container(
+                      child: Hero(
+                          tag: widget.name,
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Color(0xfff9b294),
+                            child: ClipOval(
+                              child: SizedBox(
+                                  height: 75,
+                                  width: 75,
+                                  child: Image.network(widget.imgPath,
+                                      fit: BoxFit.fill
+                                  )
+                              ),
+                            ),
+                          )
+                      ),
                     ),
                     SizedBox(width: 10.0),
                     Column(
@@ -116,7 +132,7 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
                           ),
                         ),*/
                         Container(
-                          width: 114.00,
+                          width: 125.00,
                           child: AutoSizeText(
                             widget.name,
                             style: TextStyle(
@@ -130,7 +146,7 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
                           ),
                         ),
                         Text(
-                          widget.price.toString(),
+                            '৳'+widget.price.toString(),
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 15.0,
@@ -138,7 +154,7 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
                           )
                         ),
                         Text(
-                            'x ${widget.qty}',
+                            widget.isSupplyPage? '': 'x ${widget.qty}',
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 17.0,
@@ -151,19 +167,32 @@ class _dailyNeedsItemState extends State<dailyNeedsItem> {
                   ]
                 )
               ),
-              IconButton(
-                icon: Icon(Icons.add),
-                color: Colors.black,
-                onPressed: () {
-                  increase_qty();
-                }
-              ),
-              IconButton(
-                  icon: Icon(Icons.remove),
-                  color: Colors.black,
-                  onPressed: () {
-                    decrease_qty();
-                  }
+              Row(
+                children: widget.isSupplyPage ? <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.add_box),
+                      iconSize: 40,
+                      color: Color(0xffdd3572),
+                      onPressed: () {
+                        //add items to daily needs
+                      }
+                  )
+                ] : <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      color: Colors.black,
+                      onPressed: () {
+                        increase_qty();
+                      }
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.remove),
+                      color: Colors.black,
+                      onPressed: () {
+                        decrease_qty();
+                      }
+                  )
+                ],
               )
             ],
           )

@@ -3,7 +3,8 @@ import 'package:project_resto/Animation/FadeAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_resto/daily_needs_page.dart';
-
+import 'package:project_resto/Supplies_page.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class login_page extends StatefulWidget {
 
@@ -19,13 +20,17 @@ class _login_pageState extends State<login_page> {
  String password;
  String userID;
  bool loogedIn = false;
+ bool showSpinner = false;
+
 
  //functions:
 
  //function 1
  Future<void> login() async{
-     if(loogedIn==false){
 			 try{
+			 	setState(() {
+			 	  showSpinner = true;
+			 	});
 				 final auth = FirebaseAuth.instance;
 				 final user =  await auth.signInWithEmailAndPassword(email: email, password: password);
 				 if(user!=null){
@@ -39,11 +44,16 @@ class _login_pageState extends State<login_page> {
 						 new dailyNeedsPage(),
 					 );
 					 Navigator.of(context).push(route);
+					 setState(() {
+						 showSpinner = false;
+					 });
 				 }
 			 }catch(e){
 				 print(e);
+				 setState(() {
+				   showSpinner = false;
+				 });
 			 }
-		 }
  }
 
 
@@ -58,18 +68,20 @@ class _login_pageState extends State<login_page> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-      	child: Container(
+      body: ModalProgressHUD(
+				inAsyncCall: showSpinner,
+        child: SingleChildScrollView(
+        	child: Container(
 	        child: Column(
 	          children: <Widget>[
 	            Container(
 	              height: 400,
 	              child: Stack(
 	                children: <Widget>[
-                    Positioned(
-                      right: MediaQuery. of(context). size. width/2-130,
+                      Positioned(
+                        right: MediaQuery. of(context). size. width/2-130,
 	                    top: 90,
-                      width: 200,
+                        width: 200,
 	                    height: 200,
 	                    child: FadeAnimation(1.5, Container(
 	                      decoration: BoxDecoration(
@@ -80,8 +92,8 @@ class _login_pageState extends State<login_page> {
 	                    )),
 	                  ),
 	                  Positioned(
-                      top: 270,
-                      right: MediaQuery. of(context). size. width/2-70,
+                        top: 270,
+                        right: MediaQuery. of(context). size. width/2-70,
 	                    child: FadeAnimation(1.6, Container(
 	                      margin: EdgeInsets.only(top: 30),
 	                      child: Center(
@@ -117,11 +129,11 @@ class _login_pageState extends State<login_page> {
 	                            border: Border(bottom: BorderSide(color: Colors.grey[100]))
 	                          ),
 	                          child: TextField(
-                              onChanged: (value){
-                                setState(() {
-                                  email = value;
-                                });
-                              },
+                                onChanged: (value){
+                                  setState(() {
+                                    email = value;
+                                  });
+                                },
 	                            decoration: InputDecoration(
 	                              border: InputBorder.none,
 	                              hintText: "Email",
@@ -132,11 +144,11 @@ class _login_pageState extends State<login_page> {
 	                        Container(
 	                          padding: EdgeInsets.all(8.0),
 	                          child: TextField(
-                              onChanged: (value){
-                                setState(() {
-                                  password = value;
-                                });
-                              },
+                                onChanged: (value){
+                                  setState(() {
+                                    password = value;
+                                  });
+                                },
 	                            decoration: InputDecoration(
 	                              border: InputBorder.none,
 	                              hintText: "Password",
@@ -149,10 +161,10 @@ class _login_pageState extends State<login_page> {
 	                  )),
 	                  SizedBox(height: 30,),
 	                  FadeAnimation(2, InkWell(
-                        onTap: (){
-                           login();
-                        },
-                        child: Container(
+                          onTap: (){
+                             login();
+                          },
+                          child: Container(
 	                      height: 50,
 	                      decoration: BoxDecoration(
 	                        borderRadius: BorderRadius.circular(10),
@@ -176,6 +188,7 @@ class _login_pageState extends State<login_page> {
 	          ],
 	        ),
 	      ),
+        ),
       )
     );
   }
