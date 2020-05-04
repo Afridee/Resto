@@ -6,8 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class mainDrawer extends StatefulWidget {
 
-  String userID;
-
   @override
   _mainDrawerState createState() => _mainDrawerState();
 }
@@ -16,33 +14,22 @@ class mainDrawer extends StatefulWidget {
 class _mainDrawerState extends State<mainDrawer> {
 
   //variables:
-  String Resturant_name = 'null';
+  String userID='';
 
   //Functions:
-
-  //function 1:
-  Future<void> get_user_info() async{
-    final DocumentReference user_info = Firestore.instance.document('users/'+widget.userID);
-    await for(var snapshot in user_info.snapshots()){
-      await setState(() {
-        Resturant_name = snapshot.data['name'];
-      });
-      print(Resturant_name);
-      break;
-    }
-  }
 
   //function 2:
   Future<void> getUserID() async{
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
-    widget.userID = user.uid;
+    setState(() {
+      userID = user.uid;
+    });
   }
 
   @override
   void initState() {
     getUserID();
-    get_user_info();
     super.initState();
   }
 
@@ -60,17 +47,25 @@ class _mainDrawerState extends State<mainDrawer> {
             ),
           child: Column(
             children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.only(top: 80, bottom: 80,left: 15),
-                title: Text(
-                  Resturant_name,
-                  style: TextStyle(
-                    color: Colors.white,
-                      fontSize: 50
-                  ),
-                ),
-                onTap: (){
-                },
+              StreamBuilder(
+                stream: Firestore.instance.document('users/'+userID).snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.data!=null){
+                     return ListTile(
+                       contentPadding: EdgeInsets.only(top: 80, bottom: 80,left: 15),
+                       title: Text(
+                         snapshot.data['name'],
+                         style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 50
+                         ),
+                       ),
+                       onTap: (){
+                       },
+                     );
+                   }
+                   return Container(height: 0,width: 0,);
+                }
               ),
               ListTile(
                 leading: Icon(Icons.add_box),
@@ -82,7 +77,6 @@ class _mainDrawerState extends State<mainDrawer> {
                   ),
                 ),
                 onTap: () {
-                  get_user_info();
                 },
               ),
               ListTile(
