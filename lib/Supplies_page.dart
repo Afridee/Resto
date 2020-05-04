@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/daily_needs_page.dart';
-
+import 'package:project_resto/widgets/Main_drawer.dart';
 
 class suppliesPage extends StatefulWidget {
   @override
@@ -74,6 +74,12 @@ class _suppliesPageState extends State<suppliesPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    //this little code down here turns off auto rotation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return PageView(
       children: <Widget>[
         Scaffold(
@@ -103,7 +109,7 @@ class _suppliesPageState extends State<suppliesPage> {
             ],
           ),
           drawer: Drawer(
-            //child: mainDrawer(userID: widget.userID),
+            child: mainDrawer(),
           ),
           body: Container(
             height: MediaQuery.of(context).size.height,
