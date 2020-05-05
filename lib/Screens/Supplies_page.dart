@@ -7,6 +7,7 @@ import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/Screens/daily_needs_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
+import 'package:project_resto/Screens/Cart.dart';
 
 class suppliesPage extends StatefulWidget {
   @override
@@ -183,20 +184,26 @@ class _suppliesPageState extends State<suppliesPage> {
                                         itemCount: snapshot.data.documents.length,
                                         itemBuilder: (context, index){
                                           if(searchQuery=='' || searchQuery==null){
-                                            return itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                                name: snapshot.data.documents[index]['name'],
-                                                price: snapshot.data.documents[index]['price'],
-                                                qty: snapshot.data.documents[index]['qty'],
-                                                desc: snapshot.data.documents[index]['desc'],
-                                                isSupplyPage: true);
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                              child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                  name: snapshot.data.documents[index]['name'],
+                                                  price: snapshot.data.documents[index]['price'],
+                                                  qty: snapshot.data.documents[index]['qty'],
+                                                  desc: snapshot.data.documents[index]['desc'],
+                                                  isSupplyPage: true),
+                                            );
                                           }else if(searchQuery!='' || searchQuery!=null){
                                               if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
-                                                return itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                                    name: snapshot.data.documents[index]['name'],
-                                                    price: snapshot.data.documents[index]['price'],
-                                                    qty: snapshot.data.documents[index]['qty'],
-                                                    desc: snapshot.data.documents[index]['desc'],
-                                                    isSupplyPage: true);
+                                                return Padding(
+                                                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                                  child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                      name: snapshot.data.documents[index]['name'],
+                                                      price: snapshot.data.documents[index]['price'],
+                                                      qty: snapshot.data.documents[index]['qty'],
+                                                      desc: snapshot.data.documents[index]['desc'],
+                                                      isSupplyPage: true),
+                                                );
                                               }
                                           }
                                           return Container(height: 0.0,width: 0.0);
@@ -261,7 +268,8 @@ class _suppliesPageState extends State<suppliesPage> {
             },
           ),
         ),
-        dailyNeedsPage()
+        dailyNeedsPage(),
+        Cart()
       ],
         controller: pageController,
         onPageChanged: onPageChanged,

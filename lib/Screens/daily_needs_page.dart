@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_resto/Screens/Cart.dart';
 import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/Screens/Supplies_page.dart';
@@ -91,7 +92,8 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
     ]);
 
     return PageView(
-      children: <Widget>[ suppliesPage(), Scaffold(
+      children: <Widget>[ suppliesPage(),
+        Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           flexibleSpace: Container(
@@ -180,20 +182,26 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                       itemCount: snapshot.data.documents.length,
                                       itemBuilder: (context, index){
                                         if(searchQuery=='' || searchQuery==null){
-                                          return itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                              name: snapshot.data.documents[index]['name'],
-                                              price: snapshot.data.documents[index]['price'],
-                                              qty: snapshot.data.documents[index]['qty'],
-                                              desc: snapshot.data.documents[index]['desc'],
-                                              isSupplyPage: false);
-                                        }else if(searchQuery!='' || searchQuery!=null){
-                                          if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
-                                            return itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                          return Padding(
+                                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                            child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
                                                 name: snapshot.data.documents[index]['name'],
                                                 price: snapshot.data.documents[index]['price'],
                                                 qty: snapshot.data.documents[index]['qty'],
                                                 desc: snapshot.data.documents[index]['desc'],
-                                                isSupplyPage: false);
+                                                isSupplyPage: false),
+                                          );
+                                        }else if(searchQuery!='' || searchQuery!=null){
+                                          if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                              child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                  name: snapshot.data.documents[index]['name'],
+                                                  price: snapshot.data.documents[index]['price'],
+                                                  qty: snapshot.data.documents[index]['qty'],
+                                                  desc: snapshot.data.documents[index]['desc'],
+                                                  isSupplyPage: false),
+                                            );
                                           }
                                         }
                                         return Container(height: 0.0,width: 0.0);
@@ -228,7 +236,8 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
             navBarOnTap(index);
           },
         ),
-      )],
+      ),
+      Cart()],
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: NeverScrollableScrollPhysics()
