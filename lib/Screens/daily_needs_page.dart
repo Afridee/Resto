@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:project_resto/Supplies_page.dart';
+import 'package:project_resto/Screens/Supplies_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
 
 class dailyNeedsPage extends StatefulWidget{
@@ -21,6 +21,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
   String userID = '';
   int pageIndex = 1;
   PageController pageController;
+  String searchQuery;
 
   //functions:
 
@@ -30,6 +31,11 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
       if (this.custom_Icon.icon == Icons.search) {
         this.custom_Icon = Icon(Icons.cancel);
         this.search_text = TextField(
+          onChanged: (value){
+             setState(() {
+               searchQuery = value;
+             });
+          },
             decoration: InputDecoration(
               hintText: "Search Here...",
               hintStyle: TextStyle(color: Colors.white),
@@ -63,6 +69,11 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
       duration: Duration(milliseconds: 300),
       curve: Curves.bounceInOut,
     );
+  }
+
+  //function 5
+  bool searchFunctionality(String query, String item){
+    return item.toLowerCase().trim().contains(query.toLowerCase().trim());
   }
 
  @override
@@ -168,48 +179,30 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                   return ListView.builder(
                                       itemCount: snapshot.data.documents.length,
                                       itemBuilder: (context, index){
-                                        print(snapshot.data.documents[index]['img']);
-                                        return itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                          name: snapshot.data.documents[index]['name'],
-                                          price: snapshot.data.documents[index]['price'],
-                                          qty: snapshot.data.documents[index]['qty'],
-                                          desc: snapshot.data.documents[index]['desc'],
-                                          isSupplyPage: false,);
+                                        if(searchQuery=='' || searchQuery==null){
+                                          return itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                              name: snapshot.data.documents[index]['name'],
+                                              price: snapshot.data.documents[index]['price'],
+                                              qty: snapshot.data.documents[index]['qty'],
+                                              desc: snapshot.data.documents[index]['desc'],
+                                              isSupplyPage: false);
+                                        }else if(searchQuery!='' || searchQuery!=null){
+                                          if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
+                                            return itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                name: snapshot.data.documents[index]['name'],
+                                                price: snapshot.data.documents[index]['price'],
+                                                qty: snapshot.data.documents[index]['qty'],
+                                                desc: snapshot.data.documents[index]['desc'],
+                                                isSupplyPage: false);
+                                          }
+                                        }
+                                        return Container(height: 0.0,width: 0.0);
                                       }
                                   );
                                 }
                                 return Container(height: 0.0, width: 0.0);
                               },
                             ))),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        /*InkWell(
-                          onTap: (){
-                            print(userID);
-                          },
-                          child: Container(
-                            height: 65.0,
-                            width: 120.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xffdd3572),
-                                      Color(0xffdd3572),
-                                    ]
-                                )
-                            ),
-                            child: Center(
-                                child: Text('Checkout',
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.white,
-                                        fontSize: 15.0))),
-                          ),
-                        )*/
-                      ],
-                    )
                   ],
                 ),
               )

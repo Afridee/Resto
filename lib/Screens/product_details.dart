@@ -16,7 +16,7 @@ class itemDetail extends StatelessWidget {
         elevation: 0.0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xFF545D68)),
+          icon: Icon(Icons.arrow_back, color: Color(0xffdd3572)),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -32,7 +32,7 @@ class itemDetail extends StatelessWidget {
                   'Description:',
                   style: TextStyle(
                       fontFamily: 'Varela',
-                      fontSize: 42.0,
+                      fontSize: 35.0,
                       fontWeight: FontWeight.bold,
                       color: Color(0xffdd3572))
               ),
@@ -56,20 +56,20 @@ class itemDetail extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Center(
-              child: Text('৳'+price.toString(),
+              child: Text(name,
                   style: TextStyle(
                       fontFamily: 'Varela',
-                      fontSize: 22.0,
+                      fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                       color: Color(0xffdd3572))),
             ),
             SizedBox(height: 10.0),
             Center(
-              child: Text(name,
+              child: Text('৳'+price.toString(),
                   style: TextStyle(
                       color: Color(0xFF575E67),
                       fontFamily: 'Varela',
-                      fontSize: 24.0)),
+                      fontSize: 22.0)),
             ),
             SizedBox(height: 20.0),
             Center(
@@ -107,7 +107,8 @@ class itemDetail extends StatelessWidget {
                   height: 0.0,
                   width: 0.0,
                 )
-            )
+            ),
+            SizedBox(height: 20.0)
           ]
       ),
     );

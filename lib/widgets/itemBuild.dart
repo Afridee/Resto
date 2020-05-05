@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:project_resto/product_details.dart';
+import 'package:project_resto/Screens/product_details.dart';
 
 class itemBuild extends StatefulWidget {
 

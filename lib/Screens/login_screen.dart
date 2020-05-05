@@ -2,8 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:project_resto/Animation/FadeAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_resto/daily_needs_page.dart';
-import 'package:project_resto/Supplies_page.dart';
+import 'package:project_resto/Screens/daily_needs_page.dart';
+import 'package:project_resto/Screens/Supplies_page.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class login_page extends StatefulWidget {
