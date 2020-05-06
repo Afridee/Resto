@@ -20,16 +20,27 @@ class itemBuild extends StatefulWidget {
   _itemBuildState createState() => _itemBuildState();
 }
 
-class _itemBuildState extends State<itemBuild> {
+class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMixin{
 
   //variables:
   String userID;
+  AnimationController _addButtonAnimationController;
 
   //functions:
 
   //1
   @override
   void initState() {
+    _addButtonAnimationController = AnimationController(
+      duration: Duration(milliseconds: 100),
+      vsync: this,
+      lowerBound: 0.0,
+      upperBound: 0.7
+    )..addListener((){
+      setState(() {
+        //
+      });
+    });
     getUserID();
     super.initState();
   }
@@ -78,8 +89,52 @@ class _itemBuildState extends State<itemBuild> {
 
   }
 
+  //5
+  Future<void> addToDailyNeeds() async{
+    final DocumentReference qty = Firestore.instance.document('users/${userID}/dailyNeeds/${widget.name}');
+
+    await qty.setData({
+      'desc' : widget.desc,
+      'name' : widget.name,
+      'img' : widget.imgPath,
+       'qty' : 0,
+      'price' : widget.price
+    }, merge: true);
+
+    _showDialog();
+  }
+
+  //6
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Item Added!", style: TextStyle(fontSize: 30, color: Colors.white, fontFamily: 'Varela'),),
+          content: new Text("The item you selected has been added to your daily needs", style: TextStyle(fontSize: 15, color: Colors.white, fontFamily: 'Varela'),),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close", style: TextStyle(fontSize: 17, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold), ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color(0xffdd3572),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+  double scale = _addButtonAnimationController.value + 1;
   return Padding(
         padding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
         child: InkWell(
@@ -169,14 +224,32 @@ class _itemBuildState extends State<itemBuild> {
               ),
               Row(
                 children: widget.isSupplyPage ? <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.add_box),
-                      iconSize: 40,
-                      color: Color(0xffdd3572),
-                      onPressed: () {
-                        //add items to daily needs
-                      }
-                  )
+                    GestureDetector(
+                      onTap: () async{
+                         await _addButtonAnimationController.forward();
+                        _addButtonAnimationController.reverse();
+                      },
+                      onTapDown: (TapDownDetails details){
+                          addToDailyNeeds();
+                          _addButtonAnimationController.forward();
+                      },
+                      onTapUp: (TapUpDetails details){
+                         _addButtonAnimationController.reverse();
+                      },
+                      onTapCancel: (){
+                        _addButtonAnimationController.reverse();
+                      },
+                      child: Transform.scale(
+                        scale: scale,
+                        child: Container(
+                          child: Icon(
+                              Icons.add_box,
+                              size: 40,
+                              color: Color(0xffdd3572),
+                          ),
+                        ),
+                      ),
+                    ),
                 ] : <Widget>[
                   IconButton(
                       icon: Icon(Icons.add),

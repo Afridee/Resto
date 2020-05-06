@@ -182,14 +182,37 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                       itemCount: snapshot.data.documents.length,
                                       itemBuilder: (context, index){
                                         if(searchQuery=='' || searchQuery==null){
-                                          return Padding(
-                                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                                            child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                                name: snapshot.data.documents[index]['name'],
-                                                price: snapshot.data.documents[index]['price'],
-                                                qty: snapshot.data.documents[index]['qty'],
-                                                desc: snapshot.data.documents[index]['desc'],
-                                                isSupplyPage: false),
+                                          return Dismissible(
+                                            direction: DismissDirection.endToStart,
+                                            key: ValueKey(snapshot.data.documents[index]['name']),
+                                            background: Container(
+                                                decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                        colors: [
+                                                          Color(0xffc72c41),
+                                                          Color(0xffc72c41),
+                                                        ]
+                                                    )
+                                                ),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  SizedBox(width: 260,),
+                                                  Icon(Icons.delete, color: Colors.white,)
+                                                ],
+                                              )
+                                            ),
+                                            onDismissed: (direction){
+                                              Firestore.instance.document('users/${userID}/dailyNeeds/${snapshot.data.documents[index]['name']}').delete();
+                                          },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                              child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                  name: snapshot.data.documents[index]['name'],
+                                                  price: snapshot.data.documents[index]['price'],
+                                                  qty: snapshot.data.documents[index]['qty'],
+                                                  desc: snapshot.data.documents[index]['desc'],
+                                                  isSupplyPage: false),
+                                            ),
                                           );
                                         }else if(searchQuery!='' || searchQuery!=null){
                                           if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){

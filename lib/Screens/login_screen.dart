@@ -79,7 +79,7 @@ class _login_pageState extends State<login_page> {
 	              child: Stack(
 	                children: <Widget>[
                       Positioned(
-                        right: MediaQuery. of(context). size. width/2-130,
+												right: MediaQuery. of(context). size. width/2-130,
 	                    top: 90,
                         width: 200,
 	                    height: 200,
