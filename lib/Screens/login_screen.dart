@@ -129,6 +129,7 @@ class _login_pageState extends State<login_page> {
 	                            border: Border(bottom: BorderSide(color: Colors.grey[100]))
 	                          ),
 	                          child: TextField(
+															keyboardType: TextInputType.emailAddress,
                                 onChanged: (value){
                                   setState(() {
                                     email = value;
@@ -144,6 +145,7 @@ class _login_pageState extends State<login_page> {
 	                        Container(
 	                          padding: EdgeInsets.all(8.0),
 	                          child: TextField(
+																obscureText: true,
                                 onChanged: (value){
                                   setState(() {
                                     password = value;

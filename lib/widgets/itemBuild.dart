@@ -32,7 +32,7 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
   @override
   void initState() {
     _addButtonAnimationController = AnimationController(
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 70),
       vsync: this,
       lowerBound: 0.0,
       upperBound: 0.7
