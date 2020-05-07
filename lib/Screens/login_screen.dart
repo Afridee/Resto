@@ -21,6 +21,7 @@ class _login_pageState extends State<login_page> {
  String userID;
  bool loogedIn = false;
  bool showSpinner = false;
+ String loginError = '';
 
 
  //functions:
@@ -49,9 +50,10 @@ class _login_pageState extends State<login_page> {
 					 });
 				 }
 			 }catch(e){
-				 print(e);
+				 print(e.message);
 				 setState(() {
 				   showSpinner = false;
+				   loginError = e.message;
 				 });
 			 }
  }
@@ -182,7 +184,9 @@ class _login_pageState extends State<login_page> {
 	                      ),
 	                    ),
 	                  )),
-	                  SizedBox(height: 50,),
+	                  SizedBox(height: 20,),
+										Text(loginError, style: TextStyle(color: Color(0xffdd3572), fontSize: 10.0)),
+										SizedBox(height: 20,),
 	                  FadeAnimation(1.5, Text("Forgot Password?", style: TextStyle(color: Color(0xffdd3572)),)),
 	                ],
 	              ),
