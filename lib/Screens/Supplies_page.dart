@@ -8,6 +8,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/Screens/daily_needs_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
 import 'package:project_resto/Screens/Cart.dart';
+import 'package:provider/provider.dart';
+
 
 class suppliesPage extends StatefulWidget {
   @override

@@ -10,6 +10,8 @@ import 'package:project_resto/Screens/daily_needs_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -23,6 +25,7 @@ class _CartState extends State<Cart> {
   PageController pageController;
   double  sliderValue = 0.0;
   bool showSpinner = false;
+  int totalCost = 0;
 
   //functions:
 
@@ -30,7 +33,10 @@ class _CartState extends State<Cart> {
   Future<void> getUserID() async {
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
-    userID = user.uid;
+    setState(() {
+      userID = user.uid;
+    });
+    totalCostCalculation();
   }
 
   //function 3
@@ -50,6 +56,129 @@ class _CartState extends State<Cart> {
     );
   }
 
+  //function 5
+  Future<void> confirm() async{
+    final CollectionReference items = Firestore.instance.collection('users/${userID}/dailyNeeds');
+
+    var itemList = new List();
+
+    await for(var snapshot in items.snapshots()){
+      for(var item in snapshot.documents){
+        if(item.data['qty']>0)
+        itemList.add(item.data);
+      }
+      break;
+    }
+
+    final DocumentReference userInformation = Firestore.instance.document('users/${userID}');
+
+    Map<String, dynamic> userInfo;
+
+    await for(var snapshot in userInformation.snapshots()){
+      userInfo = snapshot.data;
+      break;
+    }
+
+    final CollectionReference userRecord = Firestore.instance.collection('users/${userID}/records');
+
+    await userRecord.document().setData({
+      'time' : DateTime.now(),
+      'items' : itemList,
+      'status' : 'Processing',
+      'totalCost' : totalCost
+    });
+
+    await for(var snapshot in items.snapshots()){
+      for(var item in snapshot.documents){
+        if(item.data['qty']>0){
+          items.document(item.documentID).setData({
+            'qty' : 0
+          }, merge: true);
+        }
+      }
+      break;
+    }
+
+    navBarOnTap(1);
+    _showDialog();
+  }
+
+  //6
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Purchase Successful!", style: TextStyle(fontSize: 30, color: Colors.white, fontFamily: 'Varela'),),
+          content: new Text("We got your Order. Will be reaching you soon.", style: TextStyle(fontSize: 15, color: Colors.white, fontFamily: 'Varela'),),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("OK", style: TextStyle(fontSize: 17, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold), ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color(0xffdd3572),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))
+          ),
+        );
+      },
+    );
+  }
+
+  void _nothingBoughtDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("You bought nothing...", style: TextStyle(fontSize: 30, color: Colors.white, fontFamily: 'Varela'),),
+          content: Image.asset('assets/images/uboughtnothing.png'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("OK", style: TextStyle(fontSize: 17, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold), ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color(0xffdd3572),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))
+          ),
+        );
+      },
+    );
+  }
+
+  //7
+  Future<void> totalCostCalculation() async{
+    await setState(() {
+      totalCost = 0;
+    });
+
+    final CollectionReference items = Firestore.instance.collection('users/${userID}/dailyNeeds');
+
+
+    await for(var snapshot in items.snapshots()){
+      for(var item in snapshot.documents){
+         setState(() {
+           totalCost = totalCost + item.data['price']*item.data['qty'];
+         });
+      }
+      break;
+    }
+
+    print('I am groot');
+  }
+
   @override
   void initState() {
     pageController = PageController(initialPage: 2);
@@ -57,8 +186,22 @@ class _CartState extends State<Cart> {
     super.initState();
   }
 
+  //8
+  void totalCostCalculation2(String x, int value){
+      if(x=='add'){
+        setState(() {
+          totalCost = totalCost + value;
+        });
+      }else if(x=='deduct'){
+        setState(() {
+          totalCost = totalCost - value;
+        });
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
+
     //this little code down here turns off auto rotation
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -125,7 +268,7 @@ class _CartState extends State<Cart> {
                       ),),
                       child: ListView(
                         primary: false,
-                        padding: EdgeInsets.only(left: 25.0, right: 20.0),
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(top: 45.0),
@@ -164,7 +307,9 @@ class _CartState extends State<Cart> {
                                                           .documents[index]['qty'],
                                                       desc: snapshot.data
                                                           .documents[index]['desc'],
-                                                      isSupplyPage: false),
+                                                      isSupplyPage: false,
+                                                      isCartPage: true,
+                                                  TC: totalCostCalculation2),
                                                 );
                                               }
                                               return Container(
@@ -174,12 +319,20 @@ class _CartState extends State<Cart> {
                                       return Container(height: 0.0, width: 0.0);
                                     },
                                   ))),
-                          SizedBox(height: 20.0),
+                          SizedBox(height: 15.0),
+                          Center(child: Text('Total: ৳${totalCost}', style: TextStyle(fontSize: 20, color: Color(0xffdd3572), fontFamily: 'Varela', fontWeight: FontWeight.bold),textAlign: TextAlign.right,)),
+                          SizedBox(height: 15.0),
                           InkWell(
                             onLongPress: (){
-                              setState(() {
-                                 sliderValue = 100.0;
-                              });
+                               if(totalCost>0){
+                                 setState(() {
+                                   totalCostCalculation();
+                                   sliderValue = 100.0;
+                                 });
+                                 confirm();
+                               }else{
+                                 _nothingBoughtDialog();
+                               }
                             },
                             child: CircleAvatar(
                               radius: 62,
@@ -197,17 +350,17 @@ class _CartState extends State<Cart> {
                                           handlerSize: 6.0
                                       ),
                                       infoProperties:InfoProperties(
-                                          mainLabelStyle: TextStyle(fontSize: 15, color: Colors.white, fontFamily: 'Varela'),
+                                          mainLabelStyle: TextStyle(fontSize: 15, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold),
                                           topLabelText: ' Press and hold',
-                                          topLabelStyle: TextStyle(fontSize: 10, color: Colors.white, fontFamily: 'Varela'),
-                                          bottomLabelText: '',
-                                          bottomLabelStyle: TextStyle(fontSize: 10, color: Colors.white, fontFamily: 'Varela'),
+                                          topLabelStyle: TextStyle(fontSize: 10, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold),
+                                          bottomLabelText: 'to confirm',
+                                          bottomLabelStyle: TextStyle(fontSize: 10, color: Colors.white, fontFamily: 'Varela', fontWeight: FontWeight.bold),
                                       )
                                   ),
                                   onChange: (double value) {
                                     setState(() {
                                        value = sliderValue;
-                                       if(value==100.0){
+                                       if(value==100.0 && sliderValue==100.0 && totalCost>0){
                                            showSpinner = true;
                                        }
                                     });

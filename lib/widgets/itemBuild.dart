@@ -4,17 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:project_resto/Screens/product_details.dart';
+import 'package:provider/provider.dart';
+
+
 
 class itemBuild extends StatefulWidget {
-
  final String name;
  final String imgPath;
  final int price;
  final int qty;
  final String desc;
  final bool isSupplyPage;
+ final bool isCartPage;
+ final Function(String,int) TC;
 
-  const itemBuild({Key key, this.name, this.imgPath, this.price, this.qty, this.desc, this.isSupplyPage}) : super(key: key);
+  const itemBuild({Key key, this.name, this.imgPath, this.price, this.qty, this.desc, this.isSupplyPage, this.TC, this.isCartPage}) : super(key: key);
 
   @override
   _itemBuildState createState() => _itemBuildState();
@@ -256,6 +260,9 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
                       color: Colors.black,
                       onPressed: () {
                         increase_qty();
+                        if(widget.isCartPage==true){
+                          widget.TC('add', widget.price);
+                        }
                       }
                   ),
                   IconButton(
@@ -263,6 +270,9 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
                       color: Colors.black,
                       onPressed: () {
                         decrease_qty();
+                        if(widget.isCartPage==true){
+                          widget.TC('deduct', widget.price);
+                        }
                       }
                   )
                 ],

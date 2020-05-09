@@ -8,6 +8,7 @@ import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/Screens/Supplies_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
+import 'package:provider/provider.dart';
 
 class dailyNeedsPage extends StatefulWidget{
   @override
@@ -260,7 +261,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
           },
         ),
       ),
-      Cart()],
+        Cart()],
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: NeverScrollableScrollPhysics()
