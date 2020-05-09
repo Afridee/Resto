@@ -52,7 +52,7 @@ class _mainDrawerState extends State<mainDrawer> {
                 builder: (context, snapshot) {
                   if(snapshot.data!=null){
                      return ListTile(
-                       contentPadding: EdgeInsets.only(top: 80, bottom: 80,left: 15),
+                       contentPadding: EdgeInsets.only(top: 120, bottom: 80,left: 15),
                        title: Text(
                          snapshot.data['name'],
                          style: TextStyle(
@@ -66,42 +66,6 @@ class _mainDrawerState extends State<mainDrawer> {
                    }
                    return Container(height: 0,width: 0,);
                 }
-              ),
-              ListTile(
-                leading: Icon(Icons.add_box),
-                title: Text(
-                  'Add Item to your daily needs',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-                onTap: () {
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text(
-                  'Daily Needs',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                  ),
-                ),
-                onTap: (){
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.shopping_cart),
-                title: Text(
-                  'Cart',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                  ),
-                ),
-                onTap: (){
-                },
               ),
               ListTile(
                 leading: Icon(Icons.assignment),
