@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,8 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity/connectivity.dart';
+
 
 class Cart extends StatefulWidget {
   @override
@@ -24,6 +28,9 @@ class _CartState extends State<Cart> {
   double  sliderValue = 0.0;
   bool showSpinner = false;
   int totalCost = 0;
+  Connectivity connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  bool connectedToInternet = true;
 
   //functions:
 
@@ -122,15 +129,15 @@ class _CartState extends State<Cart> {
     );
   }
 
-  void _nothingBoughtDialog() {
+  void _customDialog(String img, String text) {
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("You bought nothing...", style: TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Varela'),),
-          content: Image.asset('assets/images/uboughtnothing.png'),
+          title: new Text(text, style: TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Varela'),),
+          content: Image.asset(img),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -171,6 +178,18 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result == ConnectivityResult.wifi || result == ConnectivityResult.mobile){
+        setState(() {
+          connectedToInternet = true;
+        });
+      }else if(result == ConnectivityResult.none){
+        setState(() {
+          connectedToInternet = false;
+        });
+      }
+    });
     getUserID();
     super.initState();
   }
@@ -294,14 +313,19 @@ class _CartState extends State<Cart> {
                             SizedBox(height: 15.0),
                             InkWell(
                               onLongPress: (){
-                                 if(totalCost>0){
+                                 if(totalCost>0 && connectedToInternet){
                                    setState(() {
                                      totalCostCalculation();
                                      sliderValue = 100.0;
                                    });
                                    confirm();
                                  }else{
-                                   _nothingBoughtDialog();
+                                   if(totalCost==0 && connectedToInternet){
+                                     _customDialog('assets/images/uboughtnothing.png', 'You bought Nothing...');
+                                   }
+                                   if(!connectedToInternet){
+                                     _customDialog('assets/images/noInternet.png', 'Please check your connection');
+                                   }
                                  }
                               },
                               child: CircleAvatar(

@@ -51,7 +51,7 @@ class _mainDrawerState extends State<mainDrawer> {
               StreamBuilder(
                 stream: Firestore.instance.document('users/'+userID).snapshots(),
                 builder: (context, snapshot) {
-                  if(snapshot.data!=null){
+                  if(snapshot.hasData && snapshot.data!=null){
                      return ListTile(
                        contentPadding: EdgeInsets.only(top: 120, bottom: 80,left: 15),
                        title: Text(
@@ -64,7 +64,20 @@ class _mainDrawerState extends State<mainDrawer> {
                        onTap: (){
                        },
                      );
-                   }
+                   }else if(!snapshot.hasData || snapshot.data==null){
+                    return ListTile(
+                      contentPadding: EdgeInsets.only(top: 120, bottom: 80,left: 15),
+                      title: Text(
+                        'Loading..',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50
+                        ),
+                      ),
+                      onTap: (){
+                      },
+                    );
+                  }
                    return Container(height: 0,width: 0,);
                 }
               ),

@@ -13,11 +13,11 @@ class RecordDataTable extends StatefulWidget {
 }
 
 class _RecordDataTableState extends State<RecordDataTable> {
-
   //variables:
   String userID = '';
   DateTime from = DateTime.now();
   DateTime to = DateTime.now();
+  ScrollController _scrollController = new ScrollController();
   //functions:
 
   //1
@@ -36,8 +36,8 @@ class _RecordDataTableState extends State<RecordDataTable> {
     super.initState();
   }
 
-  bool fromTo(Timestamp t, DateTime frm, DateTime to){
-    return t.toDate().isAfter(frm)  && t.toDate().isBefore(to);
+  bool fromTo(Timestamp t, DateTime frm, DateTime to) {
+    return t.toDate().isAfter(frm) && t.toDate().isBefore(to);
   }
 
   @override
@@ -67,6 +67,8 @@ class _RecordDataTableState extends State<RecordDataTable> {
           Color(0xffdd3572),
         ])),
         child: ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
           children: [
             SizedBox(height: 30.0),
             Container(
@@ -98,20 +100,21 @@ class _RecordDataTableState extends State<RecordDataTable> {
                   icon: Icon(Icons.edit),
                   onPressed: () {
                     showRoundedDatePicker(
-                      context: context,
-                      initialDate: from == null ? DateTime.now() : from,
-                      firstDate: DateTime(2001),
-                      lastDate: DateTime(2021),
-                        theme: ThemeData(primarySwatch: Colors.pink)
-                  ).then((date) {
-                    setState(() {
-                      if(date.year!=null){
-                        setState(() {
-                           from = date;
-                        });
-                      }
+                            context: context,
+                            initialDate: from == null ? DateTime.now() : from,
+                            firstDate: DateTime(2001),
+                            lastDate: DateTime(2021),
+                            theme: ThemeData(primarySwatch: Colors.pink))
+                        .then((date) {
+                      setState(() {
+                        if (date.year != null) {
+                          setState(() {
+                            from = date;
+                          });
+                        }
+                      });
                     });
-                  });},
+                  },
                   iconSize: 35,
                   color: Color(0xff7d2c43),
                 )
@@ -139,20 +142,26 @@ class _RecordDataTableState extends State<RecordDataTable> {
                   icon: Icon(Icons.edit),
                   onPressed: () {
                     showRoundedDatePicker(
-                        context: context,
-                        initialDate: from == null ? DateTime.now() : from,
-                        firstDate: DateTime(2001),
-                        lastDate: DateTime(2021),
-                        theme: ThemeData(primarySwatch: Colors.pink)
-                    ).then((date) {
+                            context: context,
+                            initialDate: from == null ? DateTime.now() : from,
+                            firstDate: DateTime(2001),
+                            lastDate: DateTime(2021),
+                            theme: ThemeData(primarySwatch: Colors.pink))
+                        .then((date) {
                       setState(() {
-                        if(date.year!=null){
+                        if (date.year != null) {
                           setState(() {
                             to = date;
+                            _scrollController.animateTo(
+                              500,
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 500),
+                            );
                           });
                         }
                       });
-                    });},
+                    });
+                  },
                   iconSize: 35,
                   color: Color(0xff7d2c43),
                 )
@@ -172,20 +181,31 @@ class _RecordDataTableState extends State<RecordDataTable> {
                 padding: const EdgeInsets.all(10.0),
                 child: StreamBuilder(
                   stream: Firestore.instance
-                      .collection(
-                      'users/' + userID + '/records').orderBy('time').snapshots(),
-                  builder: (context, snapshot){
-                      if(snapshot.data!=null){
-                        return ListView.builder(
-                            itemCount: snapshot.data.documents.length,
-                            itemBuilder: (context, index){
-                              if(fromTo(snapshot.data.documents[index]['time'], from, to)){
-                                return RecordItemBuild(timestamp: snapshot.data.documents[index]['time'],);
-                              }
-                              return Container(height: 0.0,width: 0.0,);
-                            });
-                      }
-                      return Container(height: 0.0,width: 0.0,);
+                      .collection('users/' + userID + '/records')
+                      .orderBy('time')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data != null) {
+                      return ListView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, index) {
+                            if (fromTo(snapshot.data.documents[index]['time'],
+                                from, to)) {
+                              return RecordItemBuild(
+                                timestamp: snapshot.data.documents[index]
+                                    ['time'],
+                              );
+                            }
+                            return Container(
+                              height: 0.0,
+                              width: 0.0,
+                            );
+                          });
+                    }
+                    return Container(
+                      height: 0.0,
+                      width: 0.0,
+                    );
                   },
                 ),
               ),
@@ -198,12 +218,11 @@ class _RecordDataTableState extends State<RecordDataTable> {
 }
 
 class RecordItemBuild extends StatefulWidget {
-
   final Timestamp timestamp;
 
-
   const RecordItemBuild({
-    Key key, this.timestamp,
+    Key key,
+    this.timestamp,
   }) : super(key: key);
 
   @override
@@ -214,29 +233,34 @@ class _RecordItemBuildState extends State<RecordItemBuild> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 15.0, top: 5),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
-                Color(0xffdd3572),
-                Color(0xfff9b294),
-                Color(0xfff9b294),
-                Color(0xffdd3572),
-              ]
-          ),
+          gradient: LinearGradient(colors: [
+            Color(0xfff9b294),
+            Color(0xfff9b294),
+          ]),
           borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30.0),
-            topLeft: Radius.circular(30.0),
-            bottomLeft: Radius.circular(30.0),
-            bottomRight: Radius.circular(30.0)
-          ),
+              topRight: Radius.circular(30.0),
+              topLeft: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0)),
         ),
         child: ListTile(
           dense: true,
           leading: Icon(Icons.description),
-          title: Container(child: AutoSizeText(widget.timestamp.toDate().toString(),overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, color: Color(0xff7d2c43), fontWeight: FontWeight.bold), )),
-          subtitle: Text(timeago.format(DateTime.tryParse(widget.timestamp.toDate().toString())).toString()),
+          title: Container(
+              child: AutoSizeText(
+            widget.timestamp.toDate().toString(),
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 20,
+                color: Color(0xff7d2c43),
+                fontWeight: FontWeight.bold),
+          )),
+          subtitle: Text(timeago
+              .format(DateTime.tryParse(widget.timestamp.toDate().toString()))
+              .toString()),
           trailing: Icon(Icons.arrow_forward_ios),
         ),
       ),

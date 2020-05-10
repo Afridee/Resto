@@ -8,6 +8,7 @@ import 'package:project_resto/widgets/itemBuild.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_resto/Screens/Supplies_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:provider/provider.dart';
 
 class dailyNeedsPage extends StatefulWidget{
@@ -54,7 +55,9 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
   Future<void> getUserID() async{
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
-    userID = user.uid;
+    setState(() {
+      userID = user.uid;
+    });
  }
  //function 3
   onPageChanged(int pageIndex) {
@@ -68,8 +71,8 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
   navBarOnTap(int pageIndex) {
     pageController.animateToPage(
       pageIndex,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.bounceInOut,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeIn,
     );
   }
 
@@ -179,64 +182,86 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                                       .collection('users/'+userID+'/dailyNeeds')
                                       .snapshots(),
                                   builder: (context, snapshot){
-                                    if(!snapshot.hasData){
-                                      return const Text('Loading..');
-                                    }
-                                    if(snapshot.hasData && snapshot.data!=null){
-                                      return ListView.builder(
-                                          itemCount: snapshot.data.documents.length,
-                                          itemBuilder: (context, index){
-                                            if(searchQuery=='' || searchQuery==null){
-                                              return Dismissible(
-                                                direction: DismissDirection.endToStart,
-                                                key: ValueKey(snapshot.data.documents[index]['name']),
-                                                background: Container(
-                                                    decoration: BoxDecoration(
-                                                        gradient: LinearGradient(
-                                                            colors: [
-                                                              Color(0xffc72c41),
-                                                              Color(0xffc72c41),
-                                                            ]
+                                      if(!snapshot.hasData){
+                                        return Padding(
+                                          padding: const EdgeInsets.all(100.0),
+                                          child: SleekCircularSlider(
+                                              appearance: CircularSliderAppearance(
+                                                spinnerMode: true,
+                                                  spinnerDuration: 5000,
+                                                  size: 50,
+                                                  customColors: CustomSliderColors(progressBarColors: [Color(0xffdd3572),Color(0xfff9b294)],
+                                                      trackColor: Color(0xfff9b294),
+                                                      shadowColor: Colors.white,
+                                                      dotColor: Color(0xfff9b294)),
+                                                  customWidths: CustomSliderWidths(
+                                                      progressBarWidth: 5.0,
+                                                      handlerSize: 6.0
+                                                  ),
+                                              ),),
+                                        );
+                                      }
+                                      else if(snapshot.hasData){
+                                        return ListView.builder(
+                                            itemCount: snapshot.data.documents.length,
+                                            itemBuilder: (context, index){
+                                              if(!snapshot.hasData){
+                                                return Text('Loading..');
+                                              }
+                                              else if(snapshot.hasData && snapshot.data!=null){
+                                                if(searchQuery=='' || searchQuery==null){
+                                                  return Dismissible(
+                                                    direction: DismissDirection.endToStart,
+                                                    key: ValueKey(snapshot.data.documents[index]['name']),
+                                                    background: Container(
+                                                        decoration: BoxDecoration(
+                                                            gradient: LinearGradient(
+                                                                colors: [
+                                                                  Color(0xffc72c41),
+                                                                  Color(0xffc72c41),
+                                                                ]
+                                                            )
+                                                        ),
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            SizedBox(width: 260,),
+                                                            Icon(Icons.delete, color: Colors.white,)
+                                                          ],
                                                         )
                                                     ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        SizedBox(width: 260,),
-                                                        Icon(Icons.delete, color: Colors.white,)
-                                                      ],
-                                                    )
-                                                ),
-                                                onDismissed: (direction){
-                                                  Firestore.instance.document('users/${userID}/dailyNeeds/${snapshot.data.documents[index]['name']}').delete();
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                                                  child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                                      name: snapshot.data.documents[index]['name'],
-                                                      price: snapshot.data.documents[index]['price'],
-                                                      qty: snapshot.data.documents[index]['qty'],
-                                                      desc: snapshot.data.documents[index]['desc'],
-                                                      isSupplyPage: false),
-                                                ),
-                                              );
-                                            }else if(searchQuery!='' || searchQuery!=null){
-                                              if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
-                                                return Padding(
-                                                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                                                  child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
-                                                      name: snapshot.data.documents[index]['name'],
-                                                      price: snapshot.data.documents[index]['price'],
-                                                      qty: snapshot.data.documents[index]['qty'],
-                                                      desc: snapshot.data.documents[index]['desc'],
-                                                      isSupplyPage: false),
-                                                );
+                                                    onDismissed: (direction){
+                                                      Firestore.instance.document('users/${userID}/dailyNeeds/${snapshot.data.documents[index]['name']}').delete();
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                                      child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                          name: snapshot.data.documents[index]['name'],
+                                                          price: snapshot.data.documents[index]['price'],
+                                                          qty: snapshot.data.documents[index]['qty'],
+                                                          desc: snapshot.data.documents[index]['desc'],
+                                                          isSupplyPage: false),
+                                                    ),
+                                                  );
+                                                }
+                                                else if(searchQuery!='' || searchQuery!=null){
+                                                  if(searchFunctionality(searchQuery, snapshot.data.documents[index]['name'])){
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                                      child: itemBuild(imgPath: snapshot.data.documents[index]['img'],
+                                                          name: snapshot.data.documents[index]['name'],
+                                                          price: snapshot.data.documents[index]['price'],
+                                                          qty: snapshot.data.documents[index]['qty'],
+                                                          desc: snapshot.data.documents[index]['desc'],
+                                                          isSupplyPage: false),
+                                                    );
+                                                  }
+                                                }
                                               }
+                                              return Container(height: 0.0,width: 0.0);
                                             }
-                                            return Container(height: 0.0,width: 0.0);
-                                          }
-                                      );
-                                    }
-                                    return Container(height: 0.0, width: 0.0);
+                                        );
+                                      }
+                                      return Container(width: 0,height: 0,);
                                   },
                                 ))),
                       ],

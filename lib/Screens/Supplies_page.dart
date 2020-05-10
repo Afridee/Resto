@@ -9,6 +9,7 @@ import 'package:project_resto/Screens/daily_needs_page.dart';
 import 'package:project_resto/widgets/Main_drawer.dart';
 import 'package:project_resto/Screens/Cart.dart';
 import 'package:provider/provider.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class suppliesPage extends StatefulWidget {
   final Function() SQ;
@@ -31,7 +32,9 @@ class _suppliesPageState extends State<suppliesPage> {
   Future<void> getUserID() async {
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
-    userID = user.uid;
+    setState(() {
+      userID = user.uid;
+    });
   }
   //function 3
 
@@ -107,7 +110,23 @@ class _suppliesPageState extends State<suppliesPage> {
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
-                            return const Text('Loading..');
+                            return Padding(
+                              padding: const EdgeInsets.all(100.0),
+                              child: SleekCircularSlider(
+                                appearance: CircularSliderAppearance(
+                                  spinnerMode: true,
+                                  spinnerDuration: 5000,
+                                  size: 50,
+                                  customColors: CustomSliderColors(progressBarColors: [Color(0xffdd3572),Color(0xfff9b294)],
+                                      trackColor: Color(0xfff9b294),
+                                      shadowColor: Colors.white,
+                                      dotColor: Color(0xfff9b294)),
+                                  customWidths: CustomSliderWidths(
+                                      progressBarWidth: 5.0,
+                                      handlerSize: 6.0
+                                  ),
+                                ),),
+                            );
                           }
                           if (snapshot.hasData && snapshot.data != null) {
                             return ListView.builder(
