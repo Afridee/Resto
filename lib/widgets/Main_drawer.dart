@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_resto/Screens/Records.dart';
 
 
 class mainDrawer extends StatefulWidget {
@@ -77,7 +78,11 @@ class _mainDrawerState extends State<mainDrawer> {
                   ),
                 ),
                 onTap: (){
-
+                  var route = new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new RecordDataTable(),
+                  );
+                  Navigator.of(context).push(route);
                 },
               ),
               ListTile(

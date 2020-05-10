@@ -129,7 +129,7 @@ class _CartState extends State<Cart> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("You bought nothing...", style: TextStyle(fontSize: 30, color: Colors.white, fontFamily: 'Varela'),),
+          title: new Text("You bought nothing...", style: TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Varela'),),
           content: Image.asset('assets/images/uboughtnothing.png'),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
