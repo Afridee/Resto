@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 
 
 class itemBuild extends StatefulWidget {
+
+
  final String name;
  final String imgPath;
  final int price;
@@ -32,31 +34,13 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
 
   //functions:
 
-  //1
-  @override
-  void initState() {
-    _addButtonAnimationController = AnimationController(
-      duration: Duration(milliseconds: 70),
-      vsync: this,
-      lowerBound: 0.0,
-      upperBound: 0.7
-    )..addListener((){
-      setState(() {
-        //
-      });
-    });
-    getUserID();
-    super.initState();
-  }
-
-  //2
+  //function 1:
   Future<void> getUserID() async{
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
     userID = user.uid;
   }
-
-  //3
+  //function 2:
   Future<void> increase_qty() async{
     int updated_qty = 0;
 
@@ -72,8 +56,7 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
     }, merge: true);
 
   }
-
-  //4
+  //function 3:
   Future<void> decrease_qty() async{
     int updated_qty = 0;
 
@@ -92,8 +75,7 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
     }
 
   }
-
-  //5
+  //function 4:
   Future<void> addToDailyNeeds() async{
     final DocumentReference qty = Firestore.instance.document('users/${userID}/dailyNeeds/${widget.name}');
 
@@ -101,14 +83,13 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
       'desc' : widget.desc,
       'name' : widget.name,
       'img' : widget.imgPath,
-       'qty' : 0,
+      'qty' : 0,
       'price' : widget.price
     }, merge: true);
 
     _showDialog();
   }
-
-  //6
+  //function 5:
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -135,6 +116,25 @@ class _itemBuildState extends State<itemBuild> with SingleTickerProviderStateMix
       },
     );
   }
+
+
+  @override
+  void initState() {
+    _addButtonAnimationController = AnimationController(
+      duration: Duration(milliseconds: 70),
+      vsync: this,
+      lowerBound: 0.0,
+      upperBound: 0.7
+    )..addListener((){
+      setState(() {
+        //
+      });
+    });
+    getUserID();
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

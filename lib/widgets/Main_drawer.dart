@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_resto/Screens/Records.dart';
+import 'package:project_resto/Screens/login_screen.dart';
+import 'package:project_resto/Screens/resetPassword.dart';
 
 
 class mainDrawer extends StatefulWidget {
@@ -108,7 +110,11 @@ class _mainDrawerState extends State<mainDrawer> {
                   ),
                 ),
                 onTap: (){
-
+                  var route = new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new resetPasswordPage(title: 'Reset Password',img: 'assets/images/resetPassIcon.png'),
+                  );
+                  Navigator.of(context).push(route);
                 },
               ),
               ListTile(
@@ -121,6 +127,13 @@ class _mainDrawerState extends State<mainDrawer> {
                   ),
                 ),
                 onTap: ()async{
+                  final auth = FirebaseAuth.instance;
+                  await auth.signOut();
+                  var route = new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new login_page(),
+                  );
+                  Navigator.of(context).push(route);
                 },
               ),
             ],

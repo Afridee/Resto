@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class suppliesPage extends StatefulWidget {
-  final Function() SQ;
+
+  final Function() SQ; //
 
   const suppliesPage({Key key, this.SQ}) : super(key: key);
 
@@ -27,8 +28,6 @@ class _suppliesPageState extends State<suppliesPage> {
   //functions:
 
   //function 1
-
-  //function 2
   Future<void> getUserID() async {
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
@@ -36,11 +35,7 @@ class _suppliesPageState extends State<suppliesPage> {
       userID = user.uid;
     });
   }
-  //function 3
-
-  //function 4
-
-  //function 5
+  //function 2
   bool searchFunctionality(String query, String item) {
     return item.toLowerCase().trim().contains(query.toLowerCase().trim());
   }

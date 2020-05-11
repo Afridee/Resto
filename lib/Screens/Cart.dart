@@ -34,7 +34,7 @@ class _CartState extends State<Cart> {
 
   //functions:
 
-  //function 2
+  //function 1
   Future<void> getUserID() async {
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
@@ -43,14 +43,7 @@ class _CartState extends State<Cart> {
     });
     totalCostCalculation();
   }
-
-  //function 3
-
-
-  //function 4
-
-
-  //function 5
+  //function 2
   Future<void> confirm() async{
     final CollectionReference items = Firestore.instance.collection('users/${userID}/dailyNeeds');
 
@@ -100,8 +93,7 @@ class _CartState extends State<Cart> {
       showSpinner = false;
     });
   }
-
-  //6
+  //function 3
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -128,7 +120,7 @@ class _CartState extends State<Cart> {
       },
     );
   }
-
+  //function 4
   void _customDialog(String img, String text) {
     // flutter defined function
     showDialog(
@@ -155,8 +147,7 @@ class _CartState extends State<Cart> {
       },
     );
   }
-
-  //7
+  //function 5 : gets called from userID
   Future<void> totalCostCalculation() async{
     await setState(() {
       totalCost = 0;
@@ -175,6 +166,18 @@ class _CartState extends State<Cart> {
     }
 
   }
+  //function 8 : gets called from itemBuild
+  void totalCostCalculation2(String x, int value){
+    if(x=='add'){
+      setState(() {
+        totalCost = totalCost + value;
+      });
+    }else if(x=='deduct'){
+      setState(() {
+        totalCost = totalCost - value;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -192,19 +195,6 @@ class _CartState extends State<Cart> {
     });
     getUserID();
     super.initState();
-  }
-
-  //8
-  void totalCostCalculation2(String x, int value){
-      if(x=='add'){
-        setState(() {
-          totalCost = totalCost + value;
-        });
-      }else if(x=='deduct'){
-        setState(() {
-          totalCost = totalCost - value;
-        });
-      }
   }
 
   @override

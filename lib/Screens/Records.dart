@@ -15,18 +15,23 @@ class RecordDataTable extends StatefulWidget {
 class _RecordDataTableState extends State<RecordDataTable> {
   //variables:
   String userID = '';
-  DateTime from = DateTime.now();
-  DateTime to = DateTime.now();
+  DateTime from = DateTime.parse("2019-07-20 20:18:04");
+  DateTime to = DateTime.parse("2019-07-20 20:18:04");
   ScrollController _scrollController = new ScrollController();
+
   //functions:
 
-  //1
+  //function 1:
   Future<void> getUserID() async {
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
     setState(() {
       userID = user.uid;
     });
+  }
+  //function 2:
+  bool fromTo(Timestamp t, DateTime frm, DateTime to) {
+    return t.toDate().isAfter(frm) && t.toDate().isBefore(to);
   }
 
   @override
@@ -36,9 +41,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
     super.initState();
   }
 
-  bool fromTo(Timestamp t, DateTime frm, DateTime to) {
-    return t.toDate().isAfter(frm) && t.toDate().isBefore(to);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +219,9 @@ class _RecordDataTableState extends State<RecordDataTable> {
     );
   }
 }
+
+
+//separateWidget=> RecordItemBuild:
 
 class RecordItemBuild extends StatefulWidget {
   final Timestamp timestamp;

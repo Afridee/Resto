@@ -22,7 +22,7 @@ class _itemDetailState extends State<itemDetail> {
 
   //functions:
 
-  //1
+  //function 1:
   Future<void> addToDailyNeeds() async{
     final DocumentReference qty = Firestore.instance.document('users/${userID}/dailyNeeds/${widget.name}');
 
@@ -36,14 +36,12 @@ class _itemDetailState extends State<itemDetail> {
 
     _showDialog();
   }
-
-  //function 2
+  //function 2:
   Future<void> getUserID() async{
     final auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
     userID = user.uid;
   }
-
   //function 3
   void _showDialog() {
     // flutter defined function

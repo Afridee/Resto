@@ -66,7 +66,6 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
       this.pageIndex = pageIndex;
     });
   }
-
   //function 4
   navBarOnTap(int pageIndex) {
     pageController.animateToPage(
@@ -75,12 +74,10 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
       curve: Curves.easeIn,
     );
   }
-
   //function 5
   bool searchFunctionality(String query, String item){
     return item.toLowerCase().trim().contains(query.toLowerCase().trim());
   }
-
   //function 6
   passedSearchQuery(){
     return searchQuery;
@@ -92,6 +89,8 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
     getUserID();
     super.initState();
   }
+
+
   @override
   Widget build(BuildContext context) {
 
