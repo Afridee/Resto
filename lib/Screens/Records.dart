@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:project_resto/Screens/Reciept.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
@@ -45,12 +47,18 @@ class _RecordDataTableState extends State<RecordDataTable> {
 
   @override
   Widget build(BuildContext context) {
+
+    //this little code down here turns off auto rotation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Color(0xffdd3572), Color(0xffdd3572)])),
+                  colors: [Color(0xffffffff), Color(0xffffffff)])),
         ),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
@@ -59,16 +67,14 @@ class _RecordDataTableState extends State<RecordDataTable> {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_ios),
-          color: Colors.white,
+          color: Colors.grey,
         ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xffdd3572),
-          Color(0xffdd3572),
-        ])),
+           color: Colors.white
+        ),
         child: ListView(
           shrinkWrap: true,
           controller: _scrollController,
@@ -76,9 +82,9 @@ class _RecordDataTableState extends State<RecordDataTable> {
             SizedBox(height: 30.0),
             Container(
               child: Image.asset(
-                'assets/images/record_Icon.png',
-                height: 120,
-                width: 120,
+                'assets/images/recordIcon.png',
+                height: 200,
+                width: 200,
               ),
             ),
             SizedBox(height: 20.0),
@@ -87,7 +93,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
               'From:',
               style: TextStyle(
                   fontSize: 30,
-                  color: Color(0xfff9b294),
+                  color: Color(0xffdd3572),
                   fontWeight: FontWeight.bold),
             )),
             Row(
@@ -97,7 +103,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
                 Text('${from.year}-${from.month}-${from.day}',
                     style: TextStyle(
                       fontSize: 25,
-                      color: Colors.white,
+                      color: Colors.grey,
                     )),
                 IconButton(
                   icon: Icon(Icons.edit),
@@ -129,7 +135,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
               'To:',
               style: TextStyle(
                   fontSize: 30,
-                  color: Color(0xfff9b294),
+                  color: Color(0xffdd3572),
                   fontWeight: FontWeight.bold),
             )),
             Row(
@@ -139,7 +145,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
                 Text('${to.year}-${to.month}-${to.day}',
                     style: TextStyle(
                       fontSize: 25,
-                      color: Colors.white,
+                      color: Colors.grey,
                     )),
                 IconButton(
                   icon: Icon(Icons.edit),
@@ -170,11 +176,11 @@ class _RecordDataTableState extends State<RecordDataTable> {
                 )
               ],
             ),
-            SizedBox(height: 100.0),
+            SizedBox(height: 10.0),
             Container(
-              height: MediaQuery.of(context).size.height - 185.0,
+              height: MediaQuery.of(context).size.height - 290.0,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:Color(0xfff29c81),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(30.0),
                   topLeft: Radius.circular(30.0),
@@ -197,6 +203,14 @@ class _RecordDataTableState extends State<RecordDataTable> {
                               return RecordItemBuild(
                                 timestamp: snapshot.data.documents[index]
                                     ['time'],
+                                OrderStatus: snapshot.data.documents[index]
+                                ['status'],
+                                totalCost: snapshot.data.documents[index]
+                                ['totalCost'],
+                                Note: snapshot.data.documents[index]
+                                ['Notes'],
+                                list: snapshot.data.documents[index]
+                                ['items'],
                               );
                             }
                             return Container(
@@ -225,10 +239,14 @@ class _RecordDataTableState extends State<RecordDataTable> {
 
 class RecordItemBuild extends StatefulWidget {
   final Timestamp timestamp;
+  final String OrderStatus;
+  final List list;
+  final int totalCost;
+  final String Note;
 
   const RecordItemBuild({
     Key key,
-    this.timestamp,
+    this.timestamp, this.OrderStatus, this.list, this.totalCost, this.Note
   }) : super(key: key);
 
   @override
@@ -238,36 +256,44 @@ class RecordItemBuild extends StatefulWidget {
 class _RecordItemBuildState extends State<RecordItemBuild> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0, top: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xfff9b294),
-            Color(0xfff9b294),
-          ]),
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30.0),
-              topLeft: Radius.circular(30.0),
-              bottomLeft: Radius.circular(30.0),
-              bottomRight: Radius.circular(30.0)),
-        ),
-        child: ListTile(
-          dense: true,
-          leading: Icon(Icons.description),
-          title: Container(
-              child: AutoSizeText(
-            widget.timestamp.toDate().toString(),
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                fontSize: 20,
-                color: Color(0xff7d2c43),
-                fontWeight: FontWeight.bold),
-          )),
-          subtitle: Text(timeago
-              .format(DateTime.tryParse(widget.timestamp.toDate().toString()))
-              .toString()),
-          trailing: Icon(Icons.arrow_forward_ios),
+    return InkWell(
+      onTap: (){
+        var route = new MaterialPageRoute(
+          builder: (BuildContext context) => new recieptPage(OrderStatus: widget.OrderStatus, list: widget.list, Note: widget.Note, totalCost: widget.totalCost,),
+        );
+        Navigator.of(context).push(route);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0, top: 5),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color(0xfff9b294),
+              Color(0xfff9b294),
+            ]),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30.0),
+                topLeft: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0)),
+          ),
+          child: ListTile(
+            leading: Icon(Icons.description, size: 40, color: Color(0xffdd3572),),
+            title: Container(
+                child: AutoSizeText(
+              '${widget.timestamp.toDate().toString()}' ,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xff7d2c43),
+                  fontWeight: FontWeight.bold),
+            )),
+            isThreeLine: true,
+            subtitle: Text(timeago
+                .format(DateTime.tryParse(widget.timestamp.toDate().toString()))
+                .toString()+', Order Status: ${widget.OrderStatus}'),
+            trailing: Icon(Icons.arrow_forward_ios, color: Color(0xffdd3572), size: 30,),
+          ),
         ),
       ),
     );

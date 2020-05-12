@@ -47,8 +47,12 @@ class _CartState extends State<Cart> {
   Future<void> confirm() async{
     final CollectionReference items = Firestore.instance.collection('users/${userID}/dailyNeeds');
 
+
+
+    //The list that will hold all the purchased items:
     var itemList = new List();
 
+    //The items with qty>0 gets added to the list:
     await for(var snapshot in items.snapshots()){
       for(var item in snapshot.documents){
         if(item.data['qty']>0)
@@ -57,24 +61,41 @@ class _CartState extends State<Cart> {
       break;
     }
 
+    //A reference for User's information:
     final DocumentReference userInformation = Firestore.instance.document('users/${userID}');
 
+    //A map to hold User Information:
     Map<String, dynamic> userInfo;
 
+    //Assigning userInformation to userInfo Map:
     await for(var snapshot in userInformation.snapshots()){
       userInfo = snapshot.data;
       break;
     }
 
+    //A reference to User's Record:
     final CollectionReference userRecord = Firestore.instance.collection('users/${userID}/records');
 
-    await userRecord.document().setData({
+    //Adding Purchase to user's Record:
+    final DocumentReference order = await userRecord.add({
       'time' : DateTime.now(),
       'items' : itemList,
       'status' : 'Processing',
-      'totalCost' : totalCost
+      'totalCost' : totalCost,
+      'Notes' : 'None'
     });
 
+    //A reference for all the orders:
+    final CollectionReference orderRecords = Firestore.instance.collection('orderRecords');
+
+    //giving a reference of this order to orderRecord:
+    await orderRecords.document().setData({
+      'userInfo' : userInfo,
+      'orderReference' : order,
+      'time' : DateTime.now()
+    });
+
+    //returning everythings quantity back to 0:
     await for(var snapshot in items.snapshots()){
       for(var item in snapshot.documents){
         if(item.data['qty']>0){
@@ -86,8 +107,10 @@ class _CartState extends State<Cart> {
       break;
     }
 
+    //showing Dialogue that purchase was a success:
     _showDialog();
 
+    //setting totalCost variable back to 0 and setting showSpinner to false:
     setState(() {
       totalCost = 0;
       showSpinner = false;
