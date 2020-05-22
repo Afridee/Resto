@@ -42,6 +42,80 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004947800544:android:965bfc9811eb02da642b85",
+        "android_client_info": {
+          "package_name": "com.teddyGames.project_resto_by_afridee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004947800544-kr8qrejkgm8pcu07b4pl5oak7gh7lmm5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teddyGames.project_resto_by_afridee",
+            "certificate_hash": "551d0f1adba9bce89221694bf704848d4c67f670"
+          }
+        },
+        {
+          "client_id": "1004947800544-8a9o29m9ho2m466tiqiu1n8ra1niq03t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDgfTv3ROkcVWR1zL6qU6vSHnRad3qtXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004947800544-8a9o29m9ho2m466tiqiu1n8ra1niq03t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004947800544:android:3998d0cd7ec7e805642b85",
+        "android_client_info": {
+          "package_name": "com.teddygames.restoadminpanel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004947800544-031nh4b0k32lo9smglroal7rc1qm91mm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teddygames.restoadminpanel",
+            "certificate_hash": "551d0f1adba9bce89221694bf704848d4c67f670"
+          }
+        },
+        {
+          "client_id": "1004947800544-8a9o29m9ho2m466tiqiu1n8ra1niq03t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDgfTv3ROkcVWR1zL6qU6vSHnRad3qtXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004947800544-8a9o29m9ho2m466tiqiu1n8ra1niq03t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
