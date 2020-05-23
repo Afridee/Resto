@@ -96,9 +96,9 @@ class _suppliesPageState extends State<suppliesPage> {
                 padding: EdgeInsets.only(left: 25.0, right: 20.0),
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 45.0),
+                    padding: EdgeInsets.only(top: 30.0),
                     child: Container(
-                      height: MediaQuery.of(context).size.height - 300.0,
+                      height: MediaQuery.of(context).size.height - 280.0,
                       child: StreamBuilder(
                         stream: Firestore.instance
                             .collection('supplies')
