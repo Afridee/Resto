@@ -93,6 +93,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
               'From:',
               style: TextStyle(
                   fontSize: 30,
+                  fontFamily: 'comfortaa',
                   color: Color(0xffdd3572),
                   fontWeight: FontWeight.bold),
             )),
@@ -134,6 +135,7 @@ class _RecordDataTableState extends State<RecordDataTable> {
                 child: Text(
               'To:',
               style: TextStyle(
+                fontFamily: 'comfortaa',
                   fontSize: 30,
                   color: Color(0xffdd3572),
                   fontWeight: FontWeight.bold),

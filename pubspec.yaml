@@ -80,6 +80,13 @@ flutter:
     - family: Varela
       fonts:
         - asset: fonts/VarelaRound-Regular.ttf
+    - family: Comfortaa
+      fonts:
+        - asset: fonts/Comfortaa-VariableFont_wght.ttf
+        - asset: fonts/Comfortaa-Bold.ttf
+        - asset: fonts/Comfortaa-Light.ttf
+        - asset: fonts/Comfortaa-Regular.ttf
+
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

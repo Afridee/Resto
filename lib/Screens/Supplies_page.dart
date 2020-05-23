@@ -71,14 +71,14 @@ class _suppliesPageState extends State<suppliesPage> {
                 children: <Widget>[
                   Text('Our',
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'comfortaa',
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 25.0)),
                   SizedBox(width: 10.0),
                   Text('Products',
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'comfortaa',
                           color: Colors.white,
                           fontSize: 25.0))
                 ],

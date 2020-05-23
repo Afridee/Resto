@@ -149,14 +149,14 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                       children: <Widget>[
                         Text('Daily',
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'comfortaa',
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 25.0)),
                         SizedBox(width: 10.0),
                         Text('Needs',
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'comfortaa',
                                 color: Colors.white,
                                 fontSize: 25.0))
                       ],

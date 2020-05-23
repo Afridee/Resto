@@ -175,7 +175,9 @@ class _login_pageState extends State<login_page> {
                           2,
                           InkWell(
                             onTap: () {
-                              login();
+                              if(email!=null && password!=null){
+                                login();
+                              }
                             },
                             child: Container(
                               height: 50,
@@ -204,14 +206,14 @@ class _login_pageState extends State<login_page> {
                             style: TextStyle(
                                 color: Color(0xffdd3572), fontSize: 10.0)),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         FadeAnimation(
                           1.5,
                           InkWell(
                             child: Text(
                               "Forgot Password?",
-                              style: TextStyle(color: Color(0xffdd3572)),
+                              style: TextStyle(color: Color(0xffdd3572), fontWeight: FontWeight.bold),
                             ),
                             onTap: () {
 															var route = new MaterialPageRoute(

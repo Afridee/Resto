@@ -248,14 +248,14 @@ class _CartState extends State<Cart> {
                           children: <Widget>[
                             Text('Your',
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'comfortaa',
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 25.0)),
                             SizedBox(width: 10.0),
                             Text('Cart',
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'comfortaa',
                                     color: Colors.white,
                                     fontSize: 25.0))
                           ],
@@ -321,9 +321,9 @@ class _CartState extends State<Cart> {
                                         return Container(height: 0.0, width: 0.0);
                                       },
                                     ))),
-                            SizedBox(height: 15.0),
-                            Center(child: Text('Total: ৳${totalCost}', style: TextStyle(fontSize: 20, color: Color(0xffdd3572), fontFamily: 'Varela', fontWeight: FontWeight.bold),textAlign: TextAlign.right,)),
-                            SizedBox(height: 15.0),
+                            SizedBox(height: 10.0),
+                            Center(child: Text('Total: ৳${totalCost}', style: TextStyle(fontSize: 25, color: Color(0xffdd3572), fontFamily: 'Varela'),textAlign: TextAlign.right,)),
+                            SizedBox(height: 10.0),
                             InkWell(
                               onLongPress: (){
                                  if(totalCost>0 && connectedToInternet){
