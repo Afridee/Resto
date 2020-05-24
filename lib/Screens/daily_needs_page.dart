@@ -173,9 +173,9 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
                       padding: EdgeInsets.only(left: 25.0, right: 20.0),
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(top: 45.0),
+                            padding: EdgeInsets.only(top: 20.0),
                             child: Container(
-                                height: MediaQuery.of(context).size.height - 300.0,
+                                height: MediaQuery.of(context).size.height - 280.0,
                                 child: StreamBuilder(
                                   stream: Firestore.instance
                                       .collection('users/'+userID+'/dailyNeeds')
@@ -280,7 +280,7 @@ class _dailyNeedsPageState extends State<dailyNeedsPage> {
           color: Color(0xffdd3572),
           backgroundColor: Colors.white,
           buttonBackgroundColor: Color(0xfff9b294),
-          height: 50,
+          height: 60,
           items: <Widget>[
             Icon(Icons.library_add, size: 30, color: Colors.white),
             Icon(Icons.account_circle, size: 30, color: Colors.white),

@@ -96,7 +96,7 @@ class _suppliesPageState extends State<suppliesPage> {
                 padding: EdgeInsets.only(left: 25.0, right: 20.0),
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 30.0),
+                    padding: EdgeInsets.only(top: 20.0),
                     child: Container(
                       height: MediaQuery.of(context).size.height - 280.0,
                       child: StreamBuilder(
