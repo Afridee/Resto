@@ -43,6 +43,7 @@ dev_dependencies:
   flutter_rounded_date_picker: ^1.0.4
   intl: ^0.15.8
   connectivity:
+  firebase_messaging: ^6.0.16
 
 
 # For information on the generic Dart part of this file, see the

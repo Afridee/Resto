@@ -6,6 +6,8 @@ import 'package:project_resto/Screens/daily_needs_page.dart';
 import 'package:project_resto/Screens/Supplies_page.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:project_resto/Screens/resetPassword.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class login_page extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _login_pageState extends State<login_page> {
   bool loogedIn = false;
   bool showSpinner = false;
   String loginError = '';
+  final FirebaseMessaging  _firebaseMessaging = FirebaseMessaging();
 
   //functions:
 
@@ -38,6 +41,18 @@ class _login_pageState extends State<login_page> {
         });
         final FirebaseUser user = await auth.currentUser();
         userID = user.uid;
+
+        //setting cloud messaging token
+        String fcmToken = await _firebaseMessaging.getToken();
+
+        final DocumentReference userDoc = Firestore.instance.document('users/'+userID);
+
+        if(fcmToken!=null){
+          await userDoc.setData({
+            'fcmToken' : fcmToken
+          }, merge: true);
+        }
+
         var route = new MaterialPageRoute(
           builder: (BuildContext context) => new dailyNeedsPage(),
         );
@@ -53,6 +68,22 @@ class _login_pageState extends State<login_page> {
         loginError = e.message;
       });
     }
+  }
+
+  @override
+  void initState() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    super.initState();
   }
 
   @override
